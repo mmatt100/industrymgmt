@@ -16,6 +16,16 @@ export const getDb = () => {
         email TEXT NOT NULL,
         phone TEXT
       );
+
+      CREATE TABLE IF NOT EXISTS products (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        description TEXT NOT NULL,
+        price INTEGER NOT NULL CHECK(price > 0),
+        stock INTEGER NOT NULL DEFAULT 0 CHECK(stock >= 0),
+        category TEXT NOT NULL,
+        created_at TEXT NOT NULL DEFAULT (datetime('now'))
+      );
     `);
   }
 

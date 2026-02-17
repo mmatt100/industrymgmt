@@ -10,6 +10,7 @@ const globalWithDb = globalThis as TestGlobals;
 beforeEach(() => {
   const db = getDb();
   db.exec('DELETE FROM contacts;');
+  db.exec('DELETE FROM products;');
 });
 
 afterAll(() => {
