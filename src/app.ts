@@ -2,7 +2,6 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import { config } from './lib/config';
-import contactRouter from './modules/contact/contact.router';
 import healthRouter from './modules/health/health.router';
 import productRouter from './modules/product/product.router';
 import orderRouter from './modules/order/order.router';
@@ -26,7 +25,6 @@ if (config.NODE_ENV !== 'test') {
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
-app.use('/contacts', contactRouter);
 app.use('/products', productRouter);
 app.use('/orders', orderRouter);
 

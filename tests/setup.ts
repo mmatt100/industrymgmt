@@ -11,7 +11,6 @@ beforeEach(() => {
   const db = getDb();
   db.exec('DELETE FROM order_items;');
   db.exec('DELETE FROM orders;');
-  db.exec('DELETE FROM contacts;');
   db.exec('DELETE FROM products;');
 });
 

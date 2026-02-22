@@ -11,12 +11,6 @@ export type ProductPayload = {
   category: string;
 };
 
-export type ContactPayload = {
-  name: string;
-  email: string;
-  phone?: string | null;
-};
-
 // --- HTTP factories ---
 export const createProduct = async (overrides: Partial<ProductPayload> = {}) => {
   const payload: ProductPayload = {
@@ -29,17 +23,6 @@ export const createProduct = async (overrides: Partial<ProductPayload> = {}) => 
   };
 
   return request(app).post('/products').send(payload);
-};
-
-export const createContact = async (overrides: Partial<ContactPayload> = {}) => {
-  const payload: ContactPayload = {
-    name: 'Test User',
-    email: 'test@example.com',
-    phone: '123-456-7890',
-    ...overrides,
-  };
-
-  return request(app).post('/contacts').send(payload);
 };
 
 // --- DB query helpers ---

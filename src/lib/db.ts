@@ -10,13 +10,6 @@ export const getDb = () => {
     dbInstance = new Database(config.SQLITE_DB_PATH);
     dbInstance.pragma('journal_mode = WAL');
     dbInstance.exec(`
-      CREATE TABLE IF NOT EXISTS contacts (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT NOT NULL,
-        phone TEXT
-      );
-
       CREATE TABLE IF NOT EXISTS products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
