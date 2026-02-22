@@ -63,13 +63,13 @@ describe('Orders API', () => {
     expect(noProduct.status).toBe(404);
     expect(noProduct.body.error).toMatch(/Product with id 9999 not found/);
 
-    // insufficient stock → 400
+    // insufficient stock → 409
     const noStock = await request(app).post('/orders').send({
       customerId: 1,
       products: [{ productId: product.body.id, quantity: 5 }],
     });
-    expect(noStock.status).toBe(400);
-    expect(noStock.body.error).toBe('Validation failed');
+    expect(noStock.status).toBe(409);
+    expect(noStock.body.error).toBe('Insufficient stock');
     expect(noStock.body.requestId).toBeDefined();
   });
 

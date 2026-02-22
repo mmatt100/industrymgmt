@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { getDb } from '../../../lib/db';
-import { NotFoundError, ValidationError } from '../../../errors/app-error';
+import { ConflictError, NotFoundError } from '../../../errors/app-error';
 import { orderReadRepository } from '../order.read-repository';
 import type { OrderWithItems } from '../order.read-repository';
 import { orderWriteRepository } from '../order.write-repository';
@@ -34,7 +34,7 @@ export const createOrderCommandHandler = (
   for (const [productId, quantity] of aggregated) {
     const product = productMap.get(productId)!;
     if (quantity > product.stock) {
-      throw new ValidationError({
+      throw new ConflictError('Insufficient stock', {
         stock: `Insufficient stock for product ${productId}: requested ${quantity}, available ${product.stock}`,
       });
     }
@@ -59,7 +59,7 @@ export const createOrderCommandHandler = (
     for (const [productId, quantity] of aggregated) {
       const changed = productRepository.deductStock(productId, quantity);
       if (changed === 0) {
-        throw new ValidationError({
+        throw new ConflictError('Insufficient stock', {
           stock: `Failed to deduct stock for product ${productId}`,
         });
       }

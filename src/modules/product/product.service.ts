@@ -1,4 +1,8 @@
-import { InternalError, NotFoundError, ValidationError } from '../../errors/app-error';
+import {
+  ConflictError,
+  InternalError,
+  NotFoundError,
+} from '../../errors/app-error';
 import { productRepository } from './product.repository';
 import type { Product, CreateProductInput } from './product.repository';
 
@@ -20,16 +24,9 @@ export const restockProduct = async (
   id: number,
   quantity: number,
 ): Promise<Product> => {
-  const product = await productRepository.getProductById(id);
-  if (!product) {
-    throw new NotFoundError('Product not found');
-  }
-
-  const newStock = product.stock + quantity;
-
-  const updated = await productRepository.updateStock(id, newStock);
+  const updated = await productRepository.increaseStock(id, quantity);
   if (!updated) {
-    throw new InternalError('Failed to update stock');
+    throw new NotFoundError('Product not found');
   }
   return updated;
 };
@@ -38,22 +35,14 @@ export const sellProduct = async (
   id: number,
   quantity: number,
 ): Promise<Product> => {
-  const product = await productRepository.getProductById(id);
-  if (!product) {
+  const result = await productRepository.decreaseStock(id, quantity);
+  if (result.status === 'not_found') {
     throw new NotFoundError('Product not found');
   }
-
-  if (quantity > product.stock) {
-    throw new ValidationError({
-      stock: `Insufficient stock: requested ${quantity}, available ${product.stock}`,
+  if (result.status === 'insufficient') {
+    throw new ConflictError('Insufficient stock', {
+      stock: `Insufficient stock: requested ${quantity}, available ${result.available}`,
     });
   }
-
-  const newStock = product.stock - quantity;
-
-  const updated = await productRepository.updateStock(id, newStock);
-  if (!updated) {
-    throw new InternalError('Failed to update stock');
-  }
-  return updated;
+  return result.product;
 };

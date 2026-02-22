@@ -52,8 +52,8 @@ describe('Products API', () => {
       .post(`/products/${id}/sell`)
       .send({ quantity: 5 });
 
-    expect(sellRes.status).toBe(400);
-    expect(sellRes.body.error).toBe('Validation failed');
+    expect(sellRes.status).toBe(409);
+    expect(sellRes.body.error).toBe('Insufficient stock');
     expect(sellRes.body.requestId).toBeDefined();
   });
 

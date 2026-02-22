@@ -5,6 +5,7 @@ import { logger } from '../lib/logger';
 const statusByCode: Record<AppError['code'], number> = {
   VALIDATION: 400,
   NOT_FOUND: 404,
+  CONFLICT: 409,
   INTERNAL: 500,
 };
 export const errorHandler = (
