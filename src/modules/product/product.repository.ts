@@ -73,4 +73,14 @@ const updateStock = async (
   return row ?? null;
 };
 
-export const productRepository = { listProducts, getProductById, createProduct, updateStock };
+const deductStock = (id: number, quantity: number): number => {
+  const db = getDb();
+  const result = db
+    .prepare(
+      'UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?',
+    )
+    .run(quantity, id, quantity);
+  return result.changes;
+};
+
+export const productRepository = { listProducts, getProductById, createProduct, updateStock, deductStock };
